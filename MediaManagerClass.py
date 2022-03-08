@@ -1,0 +1,59 @@
+import os, sys
+import pygame as pg
+class MediaManager():
+    def __init__(self,screen_size_w, screen_size_h, board, sector_size):
+        pg.init()
+        self.screen = pg.display.set_mode((screen_size_w, screen_size_h))
+        self.board = board
+        self.sector_size = sector_size
+
+        pg.display.set_caption("Four in a row")
+
+        #background
+        self.background = pg.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((0, 0, 0))
+
+        #data_graphics
+        self.sector_image = self.load_image("cell.png")
+        self.disc1_image = self.load_image("disc1.png")
+        self.disc2_image = self.load_image("disc2.png")
+
+    def draw_board(self):
+        for i in range(len(self.board.grid)):
+            for j in range(len(self.board.grid[i])):
+                self.draw_tile(j, i, self.board.grid[i][j])
+
+    def draw_tile(self,x, y, value):
+        image = None
+        if value == 0:
+            image = self.sector_image
+        elif value == 1:
+            image = self.disc1_image
+        elif value == 2:
+            image = self.disc2_image
+
+        rect = self.sector_image.get_rect()
+        rect.topleft = (x * self.sector_size, y * self.sector_size)
+        self.screen.blit(image, rect)
+
+
+    def update_graphics(self): #Выполняем апдейт всей графики
+        self.screen.blit(self.background,(0, 0))
+        self.draw_board()
+        pg.display.flip()
+
+    # functions to create our resources
+    def load_image(self,name):
+        fullname = os.path.join('data', name)
+        try:
+            image = pg.image.load(fullname)
+        except Exception as e:
+            print("Cannot load  image",name,e)
+            return None
+        if image.get_alpha() is not None:
+            image = image.convert_alpha()
+        else:
+            image = image.convert()
+        return image
+
