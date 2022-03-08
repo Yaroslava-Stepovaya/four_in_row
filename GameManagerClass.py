@@ -1,6 +1,6 @@
 import os, sys
 import pygame as pg
-from BoardClass import Board
+from bc import Board
 from MediaManagerClass import MediaManager
 
 SECTOR_SIZE = 100
