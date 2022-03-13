@@ -1,5 +1,13 @@
 import os, sys
 import pygame as pg
+
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+GRAY = (200, 200, 200)
+WHITE = (255,255,255)
+
 class MediaManager():
     def __init__(self,screen_size_w, screen_size_h, board, sector_size):
         pg.init()
@@ -19,6 +27,15 @@ class MediaManager():
         self.disc1_image = self.load_image("disc1.png")
         self.disc2_image = self.load_image("disc2.png")
 
+        # fonts
+        self.font = pg.font.SysFont('arial.ttf', 72)
+        self.font_img = None
+        self.show_draw_win_text = False
+        self.winner = ''
+
+    def set_winnner(self, player_index):
+        self.winner = str(player_index)
+
     def draw_board(self):
         for i in range(len(self.board.grid)):
             for j in range(len(self.board.grid[i])):
@@ -37,10 +54,16 @@ class MediaManager():
         rect.topleft = (x * self.sector_size, y * self.sector_size)
         self.screen.blit(image, rect)
 
+    def draw_win_text(self):
+        self.font_img = self.font.render('Player ' + self.winner + ' wins!', True, WHITE)
+        self.screen.blit(self.font_img, (40, 120))
+
 
     def update_graphics(self): #Выполняем апдейт всей графики
         self.screen.blit(self.background,(0, 0))
         self.draw_board()
+        if self.winner != '':
+            self.draw_win_text()
         pg.display.flip()
 
     # functions to create our resources
