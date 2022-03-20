@@ -1,4 +1,5 @@
 from BoardClass import Board
+from RandomAgentClass import RandomAgent
 from enum import Enum
 import numpy as np
 
@@ -13,8 +14,19 @@ class GameLogic():
         self.players.append({"player": 1, "type": player1_type})
         self.players.append({"player": 2, "type": player2_type})
         # если требуется создать ботов, то создам их
+        self.agents = {}
+        if player1_type != PlayerType.HUMAN:
+            self.create_agent(player1_type)
+        if player2_type != PlayerType.HUMAN:
+            self.create_agent(player2_type)
         self.current_player = 1  # - 1 первый,2 - второй
         self.player_wins = 0
+
+    def create_agent(self, agent_type):
+        if self.agents.get(agent_type) == None:
+            if agent_type == PlayerType.RANDOM_AGENT:
+                agent = RandomAgent(self.board)
+                self.agents[agent_type] = agent
 
     def get_unoccupied_sector(self, column):
         # мы должны вычислить куда поставить диск в колонке
@@ -65,13 +77,34 @@ class GameLogic():
             return False
         # тут проверка на победу
 
-    def MakeTurn(self, column):
+    def MakeTurn(self, column=-1):
+        result = True
         # если это игрок человек - просто кидаем диск в колонку
+        if not self.if_current_player_is_bot():
+            result = self.turn(column, self.current_player)
+        else:
         # если это бот, то делаем вычисления
+            agent = self.agents.get(self.players[self.current_player-1]["type"])
+            if agent != None:
+                bot_result = agent.make_turn(self.current_player)
+                if bot_result[0]:
+                    self.turn(bot_result[1], self.current_player)
+                else:
+                    # если ход сделать невозможно, возвращаем false - значит ничья
+                    result = False
 
-        if self.players[self.current_player-1]["type"] == PlayerType.HUMAN:
-            result = self.turn(column,self.current_player)
-            if self.check_winning_move(self.current_player):
-                self.player_wins = self.current_player
-            else:
-                self.current_player = self.current_player%2 + 1
+        # если ходы не получаются то ходить некуда, возвращаем false
+        if not result:
+            return False
+
+        if self.check_winning_move(self.current_player):
+            self.player_wins = self.current_player
+        else:
+            self.current_player = self.current_player%2 + 1
+        return True
+
+    def if_current_player_is_bot(self):
+        if self.players[self.current_player - 1]["type"] == PlayerType.HUMAN:
+            return False
+        else:
+            return True
