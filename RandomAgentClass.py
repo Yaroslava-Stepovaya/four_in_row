@@ -23,7 +23,4 @@ class RandomAgent(Agent):
         else:
             return False, None
 
-    def check_best_move(self, side):
-        pass
-        # ищем выигрышый ход, или ход, который может помешать сопернику выиграть
 
