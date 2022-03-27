@@ -1,6 +1,7 @@
 from BoardClass import Board
 from RandomAgentClass import RandomAgent
 from RandomAgentAdvancedClass import RandomAgentAdvanced
+from AgentOneStepAheadClass import AgentOneStepAhead
 from enum import Enum
 import numpy as np
 
@@ -8,6 +9,7 @@ class PlayerType(Enum):
     HUMAN = 0
     RANDOM_AGENT = 1
     RANDOM_AGENT_ADVANCED = 2
+    AGENT_ONE_STEP_AHEAD = 3
 
 class GameLogic():
     def __init__(self, board, player1_type, player2_type):
@@ -31,6 +33,9 @@ class GameLogic():
                 self.agents[agent_type] = agent
             elif agent_type == PlayerType.RANDOM_AGENT_ADVANCED:
                 agent = RandomAgentAdvanced(self.board)
+                self.agents[agent_type] = agent
+            elif agent_type == PlayerType.AGENT_ONE_STEP_AHEAD:
+                agent = AgentOneStepAhead(self.board)
                 self.agents[agent_type] = agent
 
     def get_unoccupied_sector(self, column):
