@@ -1,14 +1,39 @@
-import numpy as np
-import pygame as pg
+import math
+n = 8
+fact = 1
 
-# board = np.zeros((7, 6))
-# board[0][0] = 1
-# board[1][1] = 2
-# board[6][5] = 3
-# print(board)
+# for i in range(1, n+1):
+#     fact = fact*i
+# print(fact)
+#
+# print(math.factorial(8))
 
-fonts = pg.font.get_fonts()
-print(len(fonts))
-for f in fonts:
-    print(f)
+def factorial_recursive(n):
+    if n == 1:
+        return n
+    else:
+        return n * factorial_recursive(n-1)
+print(factorial_recursive(3))
+
+def countdown(n):
+    print(n)
+    if n == 0:
+        return
+    else:
+        countdown(n-1)
+print(countdown(3))
+
+def check(string, ch):
+    if not string:
+        return 0
+    elif string[0] == ch:
+        return 1 + check(string[1:], ch)
+    else:
+        return check(string[1:], ch)
+string = input("Введите строку:")
+ch = input("Введите букву для проверки:")
+print(check(string,ch))
+
+s = "12345"
+print(s[0:4])
 
