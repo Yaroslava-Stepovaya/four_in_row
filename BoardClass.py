@@ -7,3 +7,7 @@ class Board():
         self.columns = columns
         self.rows = rows
         self.inarow = inarow
+
+    def reset(self):
+        self.grid = np.zeros((self.rows, self.columns), dtype=int)
+

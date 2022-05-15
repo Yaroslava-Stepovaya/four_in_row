@@ -27,6 +27,12 @@ class GameLogic():
             self.create_agent(player2_type)
         self.current_player = 1  # - 1 первый,2 - второй
         self.player_wins = 0
+        self.is_draw = False
+
+    def reset(self):
+        self.board.reset()
+        self.player_wins = 0
+        self.is_draw = False
 
     def create_agent(self, agent_type):
         if self.agents.get(agent_type) == None:
@@ -110,13 +116,13 @@ class GameLogic():
 
         # если ходы не получаются то ходить некуда, возвращаем false
         if not result:
-            return False
+            self.is_draw = True
 
         if self.check_winning_move(self.current_player):
             self.player_wins = self.current_player
         else:
             self.current_player = self.current_player%2 + 1
-        return True
+
 
     def if_current_player_is_bot(self):
         if self.players[self.current_player - 1]["type"] == PlayerType.HUMAN:
